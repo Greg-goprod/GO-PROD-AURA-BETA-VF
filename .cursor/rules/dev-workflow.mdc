@@ -1,0 +1,220 @@
+---
+alwaysApply: true
+---
+
+# ⚙️ WORKFLOW DE DÉVELOPPEMENT
+
+## 🔍 AVANT DE CODER
+
+### Checklist pré-développement
+1. ✅ Y a-t-il un composant existant qui fait ça ?
+2. ✅ Quel est le pattern utilisé ailleurs ?
+3. ✅ Quelles sont les règles AURA à respecter ?
+4. ✅ Dark mode : est-ce prévu ?
+5. ✅ Mobile : est-ce responsive ?
+
+### Recherche de patterns
+```bash
+# Chercher un pattern existant
+grep -r "pattern" src/
+# Chercher un composant
+find src/components -name "*Component*"
+```
+
+## 📦 STRUCTURE DE FICHIERS
+
+### Organisation
+```
+src/
+├── components/
+│   ├── aura/          # Composants UI de base
+│   ├── crm/           # Composants CRM métier
+│   └── ui/            # Composants UI génériques
+├── pages/
+│   └── app/           # Pages de l'application
+├── api/               # Appels API Supabase
+├── hooks/             # Hooks React customs
+├── types/             # Types TypeScript
+├── utils/             # Fonctions utilitaires
+└── lib/               # Librairies configurées
+```
+
+## 🎯 RÈGLES DE CODE
+
+### TypeScript
+- ✅ Types stricts partout
+- ✅ Interfaces pour objets complexes
+- ✅ Types pour props de composants
+- ❌ Pas de `any` (sauf exception justifiée)
+
+### React
+- ✅ Composants fonctionnels uniquement
+- ✅ Hooks pour la logique
+- ✅ `useCallback` pour fonctions passées en props
+- ✅ `useMemo` pour calculs coûteux
+- ❌ Pas de classes
+
+### Imports
+```typescript
+// ✅ BON - ES6 modules
+import { X } from 'lib'
+import type { Type } from 'lib'
+
+// ❌ MAUVAIS - CommonJS
+const { X } = require('lib')
+```
+
+## 🗄️ SUPABASE
+
+### Conventions
+- Utiliser les fonctions API dans `/api`
+- RLS activé sur toutes les tables
+- Toujours filtrer par tenant (`company_id`)
+- Migrations nommées : `YYYYMMDD_HHMMSS_description.sql`
+
+### Queries
+```typescript
+// ✅ BON - Via fonction API
+const data = await fetchCRMCompanies(companyId);
+
+// ❌ ÉVITER - Query directe dans composant
+const { data } = await supabase.from('...').select('...');
+```
+
+## 🎨 STYLING
+
+### Tailwind CSS uniquement
+- ❌ Pas de CSS modules
+- ❌ Pas de styled-components
+- ❌ Pas de classes CSS personnalisées (sauf exception)
+
+### Classes courantes à mémoriser
+```typescript
+// Conteneurs
+"p-6"                                    // Padding page
+"space-y-4"                              // Espacement vertical
+"flex gap-4"                             // Flex horizontal
+"grid grid-cols-3 gap-4"                 // Grid 3 colonnes
+
+// Textes
+"text-sm font-medium text-gray-900 dark:text-gray-100"  // Labels
+"text-gray-500 dark:text-gray-400"                       // Secondaire
+
+// Borders et fonds
+"border border-gray-300 dark:border-gray-600"
+"bg-white dark:bg-gray-800"
+"rounded-lg"
+
+// Interactions
+"hover:bg-gray-50 dark:hover:bg-gray-700/50"
+"transition-colors"
+"cursor-pointer"
+```
+
+## 🧪 TESTS & VALIDATION
+
+### Avant de commit
+1. ✅ Tester mode clair ET mode sombre
+2. ✅ Vérifier responsive (mobile, tablet, desktop)
+3. ✅ Pas d'erreurs linter
+4. ✅ Pas d'erreurs TypeScript
+5. ✅ Tester le happy path ET les cas d'erreur
+
+### Linter
+```bash
+# Vérifier les erreurs
+npm run lint
+
+# Fix auto
+npm run lint:fix
+```
+
+## 📝 COMMITS
+
+### Format de commit
+```
+type(scope): description courte
+
+Description longue si nécessaire
+```
+
+### Types
+- `feat`: Nouvelle fonctionnalité
+- `fix`: Correction de bug
+- `style`: Changements de style/UI
+- `refactor`: Refactoring sans changement de fonctionnalité
+- `docs`: Documentation
+- `chore`: Maintenance
+
+### Exemples
+```
+feat(crm): add company billing section in modal
+fix(contact): correct phone number validation
+style(table): improve contrast in dark mode
+```
+
+## 🚫 À NE JAMAIS FAIRE
+
+### Code
+- ❌ Commit sans tester
+- ❌ Copier-coller sans comprendre
+- ❌ Ignorer les erreurs TypeScript
+- ❌ Utiliser `any` par facilité
+- ❌ Créer un nouveau composant sans vérifier l'existant
+
+### Git
+- ❌ Force push sur main/master
+- ❌ Commit de fichiers sensibles (.env, clés)
+- ❌ Gros commits fourre-tout
+- ❌ Skip hooks (--no-verify)
+
+### UI/UX
+- ❌ Oublier le dark mode
+- ❌ Utiliser des emojis sans demande explicite
+- ❌ Créer un pattern différent de l'existant
+- ❌ Ignorer l'accessibilité
+- ❌ Textes en dur (pas d'i18n si requis)
+
+## ✅ BONNES PRATIQUES
+
+### Performance
+- Lazy loading des routes
+- Memoization des calculs lourds
+- Debounce sur recherche/filtres
+- Pagination si > 100 items
+
+### Sécurité
+- Toujours valider côté serveur
+- Sanitize les entrées utilisateur
+- RLS Supabase activé
+- Vérifier les permissions
+
+### Accessibilité
+- Labels sur tous les inputs
+- Alt text sur images
+- Keyboard navigation
+- Focus states visibles
+- Contraste suffisant (WCAG AA minimum)
+
+### Code propre
+- Noms explicites (pas de `x`, `temp`, `foo`)
+- Fonctions courtes (< 50 lignes)
+- Commentaires pour logique complexe uniquement
+- DRY (Don't Repeat Yourself)
+- KISS (Keep It Simple, Stupid)
+
+## 🔄 PROCESS DE REVIEW
+
+### Auto-review avant demande
+1. Le code respecte-t-il les standards AURA ?
+2. Ai-je testé dans les 2 modes (clair/sombre) ?
+3. Y a-t-il des cas edge non gérés ?
+4. Le code est-il lisible et maintenable ?
+5. Ai-je documenté si nécessaire ?
+
+### Points de vigilance
+- Cohérence avec l'existant
+- Performance (pas de re-renders inutiles)
+- Sécurité (validation, RLS)
+- UX (feedback utilisateur, loading states)
+- Erreurs (gestion et affichage)

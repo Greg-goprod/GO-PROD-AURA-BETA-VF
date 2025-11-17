@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+- UNIQUEMENT utiliser les icônes Lucide React (lucide-react)
+- JAMAIS d'emojis sauf demande explicite
+- Toujours vérifier les patterns existants avant d'innover

@@ -1,0 +1,134 @@
+AURA - RÈGLES ESSENTIELLES À SUIVRE SYSTÉMATIQUEMENT
+
+═══════════════════════════════════════════════════════════
+🔴 LES 5 RÈGLES D'OR (NON NÉGOCIABLES)
+═══════════════════════════════════════════════════════════
+
+1. ICÔNES : UNIQUEMENT Lucide React (lucide-react) - JAMAIS d'emojis
+2. COMPOSANTS : Utiliser @/components/aura/ en priorité (Button, Input, PhoneInput, Modal, ConfirmDialog)
+3. DARK MODE : TOUJOURS ajouter classes dark: en parallèle
+4. COULEUR PRIMARY : Violet (violet-500, violet-600, focus:ring-violet-500)
+5. IMPORTS : ES6 uniquement (import) - JAMAIS require()
+
+═══════════════════════════════════════════════════════════
+🎨 STANDARDS VISUELS OBLIGATOIRES
+═══════════════════════════════════════════════════════════
+
+TEXTES (pour meilleure lisibilité)
+- Labels : text-gray-900 dark:text-gray-100
+- Secondaire : text-gray-500 dark:text-gray-400
+- Focus : focus:ring-2 focus:ring-violet-500
+
+TABLEAUX
+- Container : bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700
+- Header : bg-gray-50 dark:bg-gray-900
+- Rows : hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors
+- Colonnes triables : cursor-pointer hover:text-violet-400 avec flèches ▲ ▼
+
+FORMULAIRES
+- Accordion pour modals complexes (defaultOpenId="general")
+- Grid : grid-cols-2/3/4 gap-4
+- Dropdown : px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-violet-500
+
+═══════════════════════════════════════════════════════════
+🏢 CRM SPÉCIFIQUE
+═══════════════════════════════════════════════════════════
+
+ENTREPRISES - Modal Accordéon 3 sections
+1. 📋 Informations générales (ouvert par défaut)
+2. 💳 Facturation & Finance (IBAN, SWIFT, email finance)
+3. 👥 Contacts associés
+
+CONTACTS - Modal Simple
+- Layout : 3 cols (Prénom, Nom, Email) puis 2 cols (Fonction, Téléphone)
+- Zones scrollables : max-h-24 overflow-y-auto pour listes
+
+TÉLÉPHONES
+- TOUJOURS PhoneInput component
+- TOUJOURS formatPhoneNumber() pour affichage
+- getWhatsAppLink() pour liens WhatsApp
+
+BADGES COULEURS
+- Violet : Fonctions/Rôles
+- Bleu : Entreprise principale, Fournisseur
+- Gris : Entreprises liées
+- Vert : Client
+- Rouge : Erreur, suppression
+
+═══════════════════════════════════════════════════════════
+📐 LAYOUT PAGE TYPE
+═══════════════════════════════════════════════════════════
+
+<div className="p-6">
+  <header className="flex items-center justify-between mb-6">
+    <div className="flex items-center gap-2">
+      <Icon className="w-5 h-5 text-violet-400" />
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-white">TITRE</h1>
+    </div>
+    <Button variant="primary"><Plus className="w-4 h-4 mr-1" />Ajouter</Button>
+  </header>
+  <p className="text-sm text-gray-400 mb-6">Breadcrumb</p>
+  {/* Filtres : flex gap-4 sur une ligne */}
+  {/* Contenu */}
+</div>
+
+═══════════════════════════════════════════════════════════
+✅ CHECKLIST AVANT CHAQUE MODIFICATION
+═══════════════════════════════════════════════════════════
+
+1. Composant Aura existe ? → grep -r "ComponentName" src/components/aura/
+2. Icônes Lucide uniquement ? → import { Icon } from 'lucide-react'
+3. Dark mode classes ? → Vérifier chaque classe a son dark:
+4. Violet primary ? → Pas d'autre couleur pour actions principales
+5. Textes lisibles ? → gray-900/gray-100 pour labels
+6. Pattern cohérent ? → Chercher patterns similaires dans codebase
+
+═══════════════════════════════════════════════════════════
+🚫 JAMAIS FAIRE
+═══════════════════════════════════════════════════════════
+
+❌ Emojis (sauf demande explicite utilisateur)
+❌ require() → Utiliser import
+❌ any TypeScript
+❌ Oublier dark mode
+❌ Créer nouveau composant sans vérifier existant
+❌ Icônes autres que Lucide React
+❌ text-gray-700 dark:text-gray-300 → Utiliser text-gray-900 dark:text-gray-100
+❌ Innover sans vérifier patterns existants
+❌ CommonJS
+❌ CSS modules, styled-components
+
+═══════════════════════════════════════════════════════════
+🎯 IMPORTS STANDARDS À RÉUTILISER
+═══════════════════════════════════════════════════════════
+
+import { Button } from '@/components/aura/Button'
+import { Input } from '@/components/aura/Input'
+import { PhoneInput } from '@/components/aura/PhoneInput'
+import { Modal } from '@/components/aura/Modal'
+import { ConfirmDialog } from '@/components/aura/ConfirmDialog'
+import { Accordion } from '@/components/ui/Accordion'
+import { Building2, Plus, Search, Edit2, Trash2 } from 'lucide-react'
+import { formatPhoneNumber, getWhatsAppLink } from '@/utils/phoneUtils'
+import type { TypeName } from '@/types/module'
+
+═══════════════════════════════════════════════════════════
+📝 CLASSES TAILWIND FRÉQUENTES
+═══════════════════════════════════════════════════════════
+
+Container : "p-6"
+Espacements : "space-y-4" (vertical) "gap-4" (flex/grid)
+Bordures : "border border-gray-300 dark:border-gray-600"
+Fonds : "bg-white dark:bg-gray-800"
+Hover : "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+Rounded : "rounded-lg"
+
+═══════════════════════════════════════════════════════════
+
+PRINCIPE : COHÉRENCE > INNOVATION
+→ Toujours suivre patterns existants
+→ Vérifier codebase avant d'innover
+→ Tester mode clair ET mode sombre
+
+Documentation complète : .cursor/rules/README.md
+

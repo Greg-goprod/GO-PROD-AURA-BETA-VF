@@ -1,0 +1,207 @@
+---
+alwaysApply: true
+---
+
+# 🎯 STANDARDS CRM - Règles spécifiques
+
+## 📋 COMPOSANTS CRM
+
+### Sélecteurs multi-select
+- **ArtistSelector** : Sélection d'artistes associés
+- **CompanySelector** : Sélection d'entreprises
+- **ContactSelector** : Sélection de contacts
+- **RoleSelector** : Sélection de fonctions
+
+### Style des sélecteurs
+- Zone tags : `max-h-24 overflow-y-auto p-2 bg-gray-50 rounded-lg border`
+- Tags : badges violet/bleu/gris selon le type
+- Dropdown : style uniforme avec autres selects
+
+### PhotoUploader
+- Bucket : `contact-photos`
+- Taille max : 5MB
+- Formats : JPEG, PNG, WebP, GIF
+- RLS policies configurées
+
+## 🏢 ENTREPRISES (Companies)
+
+### Champs obligatoires
+- `company_name` (marqué avec *)
+
+### Organisation modal (accordéons)
+1. **📋 Informations générales** (ouvert par défaut)
+   - Nom, Type, Email, Site web, Téléphone
+   - Adresse, Code postal, Ville, Pays
+   - TVA, Tags (Fournisseur/Client)
+   - Notes d'accès
+
+2. **💳 Facturation & Finance**
+   - Nom facturation
+   - Adresse facturation complète
+   - IBAN, SWIFT/BIC
+   - Email finance, Conditions paiement, Devise
+   - Numéro d'enregistrement
+
+3. **👥 Contacts associés**
+   - ContactSelector pour liaison N-N
+
+### Pays
+- Dropdown avec ordre spécifique :
+  1. Suisse, France, Royaume-Uni, États-Unis
+  2. Séparateur
+  3. Pays européens (ordre alphabétique)
+- Pas d'emojis, juste les noms
+
+## 👤 CONTACTS (Persons)
+
+### Vue liste
+- Photo (petite, circulaire)
+- Nom (triable)
+- Fonction (badges violet)
+- Email (triable)
+- Téléphone (triable, formaté)
+- Entreprises (badge bleu pour principale, gris pour liées)
+
+### Vue grille
+- Cards avec photo
+- Actions en hover
+- Badges compacts
+
+### Modal (sans accordéon)
+- 3 colonnes : Prénom, Nom, Email
+- 2 colonnes : Fonction, Téléphone
+- Artistes associés : zone scrollable `max-h-24`
+- Entreprises associées : zone scrollable `max-h-24`
+
+### Champs supprimés
+- ❌ Département
+- ❌ Séniorité
+- ❌ Statut
+
+## 📞 TÉLÉPHONES
+
+### Affichage
+- Toujours utiliser `formatPhoneNumber()` de `@/utils/phoneUtils`
+- Format international avec drapeau via PhoneInput
+- Liens WhatsApp avec `getWhatsAppLink()`
+
+### Input
+- Toujours utiliser `PhoneInput` component
+- Pays par défaut : CH (Suisse)
+- Hauteur cohérente avec autres inputs
+
+## 🏷️ FONCTIONS (Roles)
+
+### RoleSelector
+- Affichage : "-" ou "X sélectionnée(s)"
+- Badges violet dans liste
+- ❌ Pas de création inline depuis dropdown
+
+## 🔗 RELATIONS N-N
+
+### Liens Contact-Entreprise
+- Table : `crm_contact_company_links`
+- `main_company` affiché en bleu
+- `linked_companies` affichés en gris
+
+### Liens Contact-Artiste
+- Table : `crm_artist_contact_links`
+- Badges pour affichage
+
+### Liens Contact-Rôle
+- Table : `crm_contact_role_links`
+- Badges violet pour affichage
+
+## 🎨 AFFICHAGE DES BADGES
+
+### Couleurs par contexte
+- **Violet** : Fonctions/Rôles
+- **Bleu** : Entreprise principale, Fournisseur
+- **Gris** : Entreprises liées, secondaire
+- **Vert** : Client
+- **Jaune/Orange** : À valider
+- **Rouge** : Blacklist, archivé
+
+### Truncate pour listes longues
+- `truncate` sur le texte
+- `max-w-[...]` si nécessaire
+- Tooltip avec texte complet (optionnel)
+
+## 🔍 RECHERCHE & FILTRES
+
+### Page Personnes
+- Recherche : Prénom, Nom, Email, Téléphone
+- Filtre fonction : Dropdown
+- Filtre entreprise : Dropdown
+- Badge compteur + Réinitialiser
+
+### Page Entreprises
+- Recherche : Nom, Email, Ville
+- Filtre type : Dropdown
+- Pas de recherche dans TopBar globale
+
+## 📊 TRI DES COLONNES
+
+### Colonnes triables standards
+- Nom (alphabétique)
+- Email (alphabétique)
+- Téléphone (alphabétique)
+- Type (alphabétique)
+- Localisation (alphabétique)
+
+### Indicateurs visuels
+- Flèche ▲ (asc) / ▼ (desc)
+- Couleur violet pour colonne active
+- Hover violet sur toutes les colonnes triables
+
+## ⚠️ SUPPRESSION
+
+### ConfirmDialog obligatoire
+- Titre explicite : "Supprimer [type]"
+- Message avec nom de l'entité
+- Variant : "danger"
+- Bouton : "Supprimer" (pas "OK")
+
+### Message type
+```
+Êtes-vous sûr de vouloir supprimer [type] "[nom]" ?
+
+Cette action est irréversible.
+```
+
+## 📝 NOTES & CHAMPS LONGS
+
+### Textarea standards
+- `rows={2}` ou `rows={3}` selon contexte
+- `focus:ring-2 focus:ring-violet-500`
+- Placeholder descriptif
+
+### Champs concernés
+- Notes d'accès (entreprises)
+- Notes internes (contacts)
+- Press notes (entreprises)
+
+## 🗄️ API & DATA FETCHING
+
+### Patterns établis
+- `fetchCRMCompanies()` pour liste
+- `createCRMCompany()` pour création
+- `updateCRMCompany()` pour modification
+- `deleteCRMCompany()` pour suppression
+
+### Relations
+- Toujours fetch les relations N-N séparément
+- Attacher les données au type `WithRelations`
+- Utiliser les tables de liaison appropriées
+
+## 🔐 SÉCURITÉ & RLS
+
+### Storage
+- Bucket `contact-photos` avec RLS
+- Policies : SELECT public, INSERT/UPDATE/DELETE authentifiés
+- Vérifier tenant_id dans toutes les queries
+
+### Queries
+- Toujours filtrer par `company_id` (tenant)
+- Utiliser les guards tenant pour tables de liaison
+- RLS activée sur toutes les tables CRM

@@ -1,0 +1,272 @@
+---
+alwaysApply: true
+---
+
+# 🎨 DESIGN SYSTEM AURA - Règles et Standards
+
+## 📦 COMPOSANTS UI
+
+### Composants Aura (à utiliser en priorité)
+- **Button** : `@/components/aura/Button`
+  - Variants : primary, secondary, ghost, danger
+  - Sizes : sm, md, lg
+  
+- **Input** : `@/components/aura/Input`
+  - Labels : `text-sm font-medium text-gray-900 dark:text-gray-100`
+  - Borders : `border-gray-300 dark:border-gray-600`
+  - Focus : `focus:ring-2 focus:ring-violet-500`
+  
+- **PhoneInput** : `@/components/aura/PhoneInput`
+  - Utiliser pour TOUS les numéros de téléphone
+  - Affiche drapeaux + nom de pays
+  - Validation intégrée avec libphonenumber-js/max
+  
+- **Modal** : `@/components/aura/Modal`
+  - widthClass : max-w-2xl, max-w-4xl, max-w-6xl
+  
+- **ConfirmDialog** : `@/components/aura/ConfirmDialog`
+  - Pour toutes les confirmations de suppression
+  - Variants : danger, warning, info
+
+### Composants UI génériques
+- **Accordion** : `@/components/ui/Accordion`
+  - Pour organiser les formulaires complexes
+  - defaultOpenId pour section ouverte par défaut
+
+## 🎯 ICÔNES
+
+**UNIQUEMENT Lucide React** : `lucide-react`
+- ✅ `import { Building2, Plus, Search, Edit2, Trash2 } from 'lucide-react'`
+- ❌ JAMAIS d'emojis (sauf demande explicite)
+- ❌ JAMAIS d'autres librairies d'icônes
+
+## 🎨 COULEURS
+
+### Couleur principale : Violet
+- Primary : `violet-500`, `violet-600`
+- Hover : `hover:bg-violet-600`
+- Focus : `focus:ring-violet-500`
+
+### Couleurs de texte
+- **Labels et titres** : 
+  - Mode clair : `text-gray-900`
+  - Mode sombre : `text-gray-100`
+  
+- **Texte secondaire** :
+  - Mode clair : `text-gray-500`
+  - Mode sombre : `text-gray-400`
+
+### Bordures et fonds
+- Bordures : `border-gray-300 dark:border-gray-600`
+- Fonds : `bg-white dark:bg-gray-800`
+- Hover sur lignes : `hover:bg-gray-50 dark:hover:bg-gray-700/50`
+
+## 📋 TABLEAUX (Standards AURA)
+
+### Structure
+```tsx
+<div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+  <table className="w-full">
+    <thead className="bg-gray-50 dark:bg-gray-900">
+      <tr>
+        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+          Colonne
+        </th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+      <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+        <td className="px-4 py-3">...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Colonnes triables
+```tsx
+<th 
+  className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-violet-400 transition-colors select-none"
+  onClick={() => handleSort('column')}
+>
+  <div className="flex items-center gap-2">
+    Nom
+    <span className={sortColumn === 'column' ? 'text-violet-400' : 'text-gray-400 dark:text-gray-500'}>
+      {sortColumn === 'column' && sortDirection === 'asc' ? '▲' : '▼'}
+    </span>
+  </div>
+</th>
+```
+
+### Boutons d'action dans les tableaux
+```tsx
+<button
+  onClick={() => handleEdit(item)}
+  className="p-1 text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+  title="Modifier"
+>
+  <Edit2 className="w-4 h-4" />
+</button>
+```
+
+## 📝 FORMULAIRES
+
+### Layout accordéon (pour formulaires complexes)
+- Section "Informations générales" ouverte par défaut
+- Sections groupées logiquement (Facturation, Contacts, etc.)
+- Padding : `pt-4` pour le contenu
+
+### Grid layout
+- 2 colonnes : `grid grid-cols-2 gap-4`
+- 3 colonnes : `grid grid-cols-3 gap-4`
+- 4 colonnes : `grid grid-cols-4 gap-3`
+
+### Dropdowns personnalisés
+```tsx
+<select
+  className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+>
+  <option value="">Sélectionner...</option>
+</select>
+```
+
+### Checkboxes
+```tsx
+<label className="flex items-center gap-2 cursor-pointer">
+  <input
+    type="checkbox"
+    className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+  />
+  <span className="text-sm text-gray-900 dark:text-gray-100">Label</span>
+</label>
+```
+
+### Textarea
+```tsx
+<textarea
+  rows={2}
+  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-violet-500"
+  placeholder="..."
+/>
+```
+
+## 🔍 RECHERCHE & FILTRES
+
+### Barre de recherche
+```tsx
+<div className="relative flex-1">
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+  <Input
+    type="text"
+    placeholder="Rechercher..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="pl-10"
+  />
+</div>
+```
+
+### Disposition recherche + filtres
+- Une seule ligne horizontale : `flex gap-4`
+- Recherche : `flex-1`
+- Filtres : largeur fixe `min-w-[200px]`
+- Badge compteur sous la ligne de filtres
+
+## 🎭 BADGES
+
+### Couleurs par type
+- **Violet** : Fonction/Rôle principal
+- **Bleu** : Entreprise principale, Fournisseur
+- **Gris** : Entreprises liées, secondaire
+- **Vert** : Client, actif
+- **Rouge** : Suppression, erreur
+
+### Structure
+```tsx
+<span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
+  Label
+</span>
+```
+
+## 📱 RESPONSIVE
+
+### Breakpoints Tailwind
+- sm: 640px
+- md: 768px
+- lg: 1024px
+- xl: 1280px
+
+### Patterns courants
+- Mobile first approach
+- Grids qui s'adaptent : `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`
+
+## 🌗 DARK MODE
+
+**TOUJOURS supporter le dark mode**
+- Utiliser les classes `dark:` systématiquement
+- Tester dans les deux modes
+- Contraste suffisant dans les deux modes
+
+## ⚡ PERFORMANCE & OPTIMISATION
+
+### Imports
+- ES6 modules uniquement : `import { X } from 'lib'`
+- ❌ JAMAIS de CommonJS : `require()`
+- Type imports séparés : `import type { Type } from 'lib'`
+
+### Phone utils
+- `libphonenumber-js/max` pour validation
+- `formatPhoneNumber()` pour affichage uniforme
+- `getWhatsAppLink()` pour liens WhatsApp
+
+## 📐 STANDARDS DE PAGE
+
+### Structure de page type
+```tsx
+<div className="p-6">
+  {/* En-tête */}
+  <header className="flex items-center justify-between mb-6">
+    <div className="flex items-center gap-2">
+      <Icon className="w-5 h-5 text-violet-400" />
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-white">TITRE</h1>
+    </div>
+    <Button variant="primary" onClick={handleAdd}>
+      <Plus className="w-4 h-4 mr-1" />
+      Ajouter
+    </Button>
+  </header>
+
+  <p className="text-sm text-gray-400 mb-6">Breadcrumb</p>
+
+  {/* Filtres */}
+  <div className="mb-6 space-y-4">
+    {/* ... */}
+  </div>
+
+  {/* Contenu */}
+  {/* ... */}
+</div>
+```
+
+## 🔗 CONVENTIONS DE NOMMAGE
+
+### Fichiers
+- Composants : PascalCase (`Button.tsx`, `PhoneInput.tsx`)
+- Utils : camelCase (`phoneUtils.ts`, `dateUtils.ts`)
+- Pages : camelCase (`personnes.tsx`, `entreprises.tsx`)
+
+### Variables
+- États : camelCase (`isLoading`, `selectedItems`)
+- Constantes : SCREAMING_SNAKE_CASE (`COUNTRIES`, `API_URL`)
+- Fonctions : camelCase (`handleSubmit`, `formatData`)
+
+## 🎯 RÈGLES IMPORTANTES
+
+1. **Toujours** vérifier les patterns existants avant d'innover
+2. **Toujours** utiliser les composants Aura existants
+3. **Toujours** supporter le dark mode
+4. **Jamais** créer de nouveaux composants sans vérifier l'existant
+5. **Jamais** utiliser des librairies externes sans validation
+6. Préférer la **cohérence** à l'innovation
+7. Tester dans **les deux modes** (clair/sombre)
+8. Respecter la **hiérarchie visuelle** (titres, textes, actions)
